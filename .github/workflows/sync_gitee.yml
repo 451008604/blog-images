@@ -1,10 +1,9 @@
 name: Sync To Gitee
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
+on:[ push, delete, create ]
+
+concurrency:
+  group: git-mirror
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -12,6 +11,7 @@ jobs:
       - uses: wearerequired/git-mirror-action@master
         env:
           SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
         with:
           source-repo: "git@github.com:451008604/blog-images.git"
           destination-repo: "git@gitee.com:guohaoqin/blog-images.git"
